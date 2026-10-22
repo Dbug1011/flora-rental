@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<style>
+  :root { --fuchsia:#C21875; --blush:#F7D5E5; --plum:#4B203D; --line:#ead3df; }
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; color: var(--plum); margin: 0; padding: 12px; font-size: 13px; }
+  h1 { font-size: 16px; margin: 0 0 8px; color: var(--fuchsia); }
+  h2 { font-size: 13px; margin: 0; }
+  details { border: 1px solid var(--line); border-radius: 8px; margin: 0 0 10px; background: #fff; }
+  summary { cursor: pointer; padding: 10px; font-weight: bold; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  details[open] summary { border-bottom: 1px solid var(--line); }
+  .body { padding: 10px; }
+  label { display: block; font-size: 12px; margin: 8px 0 3px; font-weight: bold; }
+  input, select, textarea { width: 100%; padding: 6px; border: 1px solid #c9b3c0; border-radius: 6px; font: inherit; color: inherit; }
+  input[type=checkbox] { width: auto; margin-right: 6px; }
+  .check { display: flex; align-items: flex-start; font-weight: normal; }
+  button { background: var(--fuchsia); color: #fff; border: 0; border-radius: 6px; padding: 7px 10px; font: inherit; font-weight: bold; cursor: pointer; margin: 6px 6px 0 0; }
+  button.secondary { background: #fff; color: var(--plum); border: 1px solid var(--plum); }
+  button:disabled { opacity: .5; cursor: wait; }
+  .row { display: flex; gap: 6px; } .row > * { flex: 1; }
+  .msg { padding: 8px; border-radius: 6px; margin: 8px 0; white-space: pre-wrap; }
+  .ok { background: #e7f6ec; color: #145a2c; } .err { background: #fde8ec; color: #8a1031; }
+  .warn { background: #fff4d6; color: #6b4b00; }
+  .list { margin: 4px 0 10px; padding: 0; list-style: none; }
+  .list li { padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .muted { color: #7a5a6e; }
+  .pill { display: inline-block; padding: 1px 6px; border-radius: 10px; background: var(--blush); font-size: 11px; }
+  .kv { display: grid; grid-template-columns: 110px 1fr; gap: 3px 8px; margin: 6px 0; }
+  .kv div:nth-child(odd) { color: #7a5a6e; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 10px 0; }
+</style>
+</head>
+<body>
+<h1>Flora staff panel</h1>
+<div id="status"></div>
+
+<details open>
+  <summary>Today &amp; upcoming</summary>
+  <div class="body" id="upcoming"><span class="muted">Loading…</span></div>
+</details>
+
+<details id="bookingBox" open>
+  <summary>Find a booking</summary>
+  <div class="body">
+    <div class="row"><input id="code" placeholder="FL-XXXXXX" autocomplete="off"><button style="flex:0" onclick="loadBooking()">Load</button></div>
+    <div id="bookingView"></div>
+  </div>
+</details>
+
+<details>
+  <summary>New Facebook / walk-in booking</summary>
+  <div class="body">
+    <label>Source</label>
+    <select id="m_source"><option>Facebook</option><option>Walk-in</option></select>
+    <label>Customer full name</label><input id="m_name">
+    <label>Mobile number</label><input id="m_mobile" placeholder="09XX XXX XXXX">
+    <label>Facebook name</label><input id="m_fb">
+    <label>Facebook profile link</label><input id="m_fblink" placeholder="https://www.facebook.com/...">
+    <label>Dresses</label><div id="m_items"></div>
+    <div class="row">
+      <div><label>Pickup date</label><input id="m_pickup" type="date"></div>
+      <div><label>Days</label><input id="m_days" type="number" min="1" max="30"></div>
+    </div>
+    <label>Pickup time</label><input id="m_time" list="slots"><datalist id="slots"></datalist>
+    <label class="check"><input type="checkbox" id="m_terms">Customer accepted the rental terms</label>
+    <label class="check"><input type="checkbox" id="m_privacy">Customer was given the privacy notice</label>
+    <label class="check"><input type="checkbox" id="m_confirm" onchange="document.getElementById('m_depwrap').style.display=this.checked?'block':'none'">Deposit already received and verified — confirm now</label>
+    <div id="m_depwrap" style="display:none"><label>Verified deposit (₱)</label><input id="m_dep" type="number" min="0"></div>
+    <button onclick="manualBooking()">Create booking</button>
+    <p class="muted">Uses the same availability check as the website. If a dress is taken, nothing is saved.</p>
+  </div>
+</details>
+
+<details>
+  <summary>Block dates (cleaning, repair)</summary>
+  <div class="body">
+    <label>Dress</label><select id="b_item"></select>
+    <div class="row">
+      <div><label>Start</label><input id="b_start" type="date"></div>
+      <div><label>End</label><input id="b_end" type="date"></div>
+    </div>
+    <label>Reason</label>
+    <select id="b_reason"><option>Cleaning</option><option>Repair</option><option>Owner use</option><option>Other</option></select>
+    <label class="check"><input type="checkbox" id="b_force">Block anyway, even if it overlaps a booking</label>
+    <button onclick="addBlock()">Block dates</button>
+  </div>
+</details>
+
+<script>
+var DATA = null, CURRENT = null;
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function peso(n) { if (n === '' || n == null || isNaN(Number(n))) return '—'; return '₱' + Number(n).toLocaleString('en-PH'); }
+function show(el, cls, text) { document.getElementById(el).innerHTML = text ? '<div class="msg ' + cls + '">' + esc(text) + '</div>' : ''; }
+function busy(on) { Array.prototype.forEach.call(document.querySelectorAll('button'), function (b) { b.disabled = on; }); }
+function val(id) { return document.getElementById(id).value.trim(); }
+
+function call(fn, args, onOk) {
+  busy(true);
+  var runner = google.script.run.withSuccessHandler(function (r) { busy(false); onOk(r); })
+    .withFailureHandler(function (e) { busy(false); show('status', 'err', 'Error: ' + (e && e.message ? e.message : e)); });
+  runner[fn].apply(runner, args);
+}
+
+function refresh() {
+  call('staffData', [], function (d) {
+    DATA = d;
+    var st = '';
+    if (!d.bookingsOpen) st = 'Website bookings are OFF.' + (d.blockers.length ? ' Missing settings: ' + d.blockers.join(', ') : ' Set bookings_enabled to TRUE when ready.');
+    show('status', 'warn', st);
+    renderUpcoming(d.upcoming);
+    var opts = d.items.map(function (it) { return '<option value="' + esc(it.id) + '">' + esc(it.id + ' · ' + it.name + (it.size ? ' (' + it.size + ')' : '')) + '</option>'; }).join('');
+    document.getElementById('b_item').innerHTML = opts;
+    document.getElementById('m_items').innerHTML = d.items.map(function (it) {
+      return '<label class="check"><input type="checkbox" class="m_item" value="' + esc(it.id) + '"' + (it.price > 0 ? '' : ' disabled') + '>' +
+        esc(it.id + ' · ' + it.name + (it.size ? ' (' + it.size + ')' : '') + (it.price > 0 ? ' · ' + peso(it.price) : ' · no price yet')) + '</label>';
+    }).join('');
+    document.getElementById('slots').innerHTML = d.settings.pickupTimeSlots.map(function (s) { return '<option value="' + esc(s) + '">'; }).join('');
+    if (!val('m_days')) document.getElementById('m_days').value = d.settings.rentalDays;
+  });
+}
+
+function rowHtml(r, extra) {
+  return '<li><b><a href="#" onclick="document.getElementById(\'code\').value=\'' + esc(r.code) + '\';loadBooking();return false;">' + esc(r.code) + '</a></b> · ' +
+    esc(r.customer) + '<br><span class="muted">' + esc(r.items) + '</span><br>' + extra + '</li>';
+}
+function renderUpcoming(u) {
+  var h = '<div class="muted">Today: ' + esc(u.today) + '</div>';
+  h += '<h2>Overdue (' + u.overdue.length + ')</h2><ul class="list">' + (u.overdue.map(function (r) { return rowHtml(r, 'Due ' + esc(r.returnDate) + ' · <b>' + r.daysLate + ' day(s) late</b> · ' + esc(r.mobile)); }).join('') || '<li class="muted">None</li>') + '</ul>';
+  h += '<h2>Pickups, next 7 days (' + u.pickups.length + ')</h2><ul class="list">' + (u.pickups.map(function (r) { return rowHtml(r, esc(r.pickupDate) + ' ' + esc(r.pickupTime)); }).join('') || '<li class="muted">None</li>') + '</ul>';
+  h += '<h2>Returns, next 7 days (' + u.returns.length + ')</h2><ul class="list">' + (u.returns.map(function (r) { return rowHtml(r, 'Due ' + esc(r.returnDate)); }).join('') || '<li class="muted">None</li>') + '</ul>';
+  h += '<h2>Requests on hold (' + u.pendingHolds.length + ')</h2><ul class="list">' + (u.pendingHolds.map(function (r) { return rowHtml(r, 'FB review: ' + esc(r.facebookReview) + ' · hold until ' + esc(r.holdExpiry)); }).join('') || '<li class="muted">None</li>') + '</ul>';
+  h += '<button class="secondary" onclick="refresh()">Refresh</button>';
+  document.getElementById('upcoming').innerHTML = h;
+}
+
+function loadBooking() {
+  var code = val('code').toUpperCase();
+  if (!code) return;
+  call('staffLoadBooking', [code], function (r) {
+    if (!r.ok) { document.getElementById('bookingView').innerHTML = '<div class="msg err">' + esc(r.message) + '</div>'; return; }
+    CURRENT = r;
+    renderBooking(r);
+  });
+}
+
+function renderBooking(r) {
+  var b = r.booking;
+  var itemsOpts = '<option value="ALL">All dresses</option>' + r.items.map(function (i) { return '<option value="' + esc(i.itemId) + '">' + esc(i.itemId + ' · ' + i.name) + '</option>'; }).join('');
+  var h = '<div id="actionMsg"></div><div class="kv">' +
+    '<div>Status</div><div><span class="pill">' + esc(b.status) + '</span>' + (b.status === 'Hold' ? (b.holdActive ? ' until ' + esc(b.holdExpiry) : ' <b>(expired ' + esc(b.holdExpiry) + ')</b>') : '') + '</div>' +
+    '<div>Customer</div><div>' + esc(b.customerName) + '<br>' + esc(b.mobile) + '</div>' +
+    '<div>Facebook</div><div>' + esc(b.facebookName) + (b.facebookLink ? '<br><a href="' + esc(b.facebookLink) + '" target="_blank">profile</a>' : '') + '<br>Review: ' + esc(b.facebookReview) + '</div>' +
+    '<div>Dates</div><div>Pickup ' + esc(b.pickupDate) + ' ' + esc(b.pickupTime) + '<br>Return ' + esc(b.returnDate) + ' by ' + esc(b.returnDeadline) + '</div>' +
+    '<div>Rental</div><div>' + peso(b.rentalTotal) + ' · paid ' + peso(b.rentalPaid) + '</div>' +
+    '<div>Deposit</div><div>required ' + peso(b.depositRequired) + ' · verified ' + peso(b.depositVerified) + '<br>deductions ' + peso(b.deductions) + ' · refunded ' + peso(b.refundAmount) + '</div>' +
+    '<div>Source</div><div>' + esc(b.source) + '</div></div>' +
+    '<ul class="list">' + r.items.map(function (i) { return '<li>' + esc(i.itemId + ' · ' + i.name) + ' · ' + peso(i.price) + (Number(i.extensionCharge) ? ' + ' + peso(i.extensionCharge) : '') + '<br><span class="muted">' + esc(i.pickupStatus) + ' · ' + esc(i.returnStatus) + '</span></li>'; }).join('') + '</ul>' +
+
+    '<hr><h2>1 · Facebook account review</h2>' +
+    '<label>Facebook profile link</label><input id="a_fblink" value="' + esc(b.facebookLink) + '">' +
+    '<button onclick="act(\'facebookReview\',{result:\'Approved\',facebookLink:val(\'a_fblink\')})">Approve account</button>' +
+    '<button class="secondary" onclick="act(\'facebookReview\',{result:\'Rejected\',facebookLink:val(\'a_fblink\')})">Reject</button>' +
+
+    '<hr><h2>2 · Deposit received (verified in your account)</h2>' +
+    '<div class="row"><input id="a_dep" type="number" min="0" placeholder="Amount ₱" value="' + esc(b.depositRequired) + '"><input id="a_depnote" placeholder="Reference / note"></div>' +
+    '<button onclick="act(\'recordDeposit\',{amount:val(\'a_dep\'),note:val(\'a_depnote\')})">Record verified deposit</button>' +
+
+    '<hr><h2>3 · Confirm booking</h2>' +
+    '<label class="check"><input type="checkbox" id="a_late">I reviewed this late payment (hold expired)</label>' +
+    '<button onclick="act(\'confirm\',{allowExpired:document.getElementById(\'a_late\').checked})">Confirm (rechecks availability)</button>' +
+    '<div class="row"><input id="a_hours" type="number" min="1" max="168" placeholder="Hours"><button class="secondary" style="flex:0;white-space:nowrap" onclick="act(\'extendHold\',{hours:val(\'a_hours\')})">Extend hold</button></div>' +
+
+    '<hr><h2>Pickup &amp; return (per dress)</h2>' +
+    '<select id="a_item">' + itemsOpts + '</select>' +
+    '<input id="a_cond" placeholder="Condition notes (e.g. small mark on hem)" style="margin-top:6px">' +
+    '<button onclick="act(\'pickup\',{itemId:val(\'a_item\'),condition:val(\'a_cond\')})">Record pickup</button>' +
+    '<button onclick="act(\'return\',{itemId:val(\'a_item\'),condition:val(\'a_cond\')})">Record return</button>' +
+    '<button class="secondary" onclick="act(\'inspection\',{itemId:val(\'a_item\'),notes:val(\'a_cond\')})">Save inspection note</button>' +
+    '<div class="row"><input id="a_rent" type="number" min="0" placeholder="Rental paid ₱"><button class="secondary" style="flex:0;white-space:nowrap" onclick="act(\'rentalPayment\',{amount:val(\'a_rent\')})">Record rental payment</button></div>' +
+
+    '<hr><h2>Extension</h2>' +
+    '<div class="row"><input id="a_ext" type="number" min="1" max="14" placeholder="Extra days"><button style="flex:0;white-space:nowrap" onclick="act(\'approveExtension\',{extraDays:val(\'a_ext\')})">Approve extension</button></div>' +
+
+    '<hr><h2>Deposit refund</h2>' +
+    '<div class="row"><input id="a_ded" type="number" min="0" placeholder="Deductions ₱"><input id="a_ref" type="number" min="0" placeholder="Refund ₱"></div>' +
+    '<input id="a_refnote" placeholder="Reason for deductions (required if any)" style="margin-top:6px">' +
+    '<button onclick="act(\'refund\',{deductions:val(\'a_ded\'),refund:val(\'a_ref\'),note:val(\'a_refnote\')})">Record refund</button>' +
+
+    '<hr><h2>Cancel</h2>' +
+    '<input id="a_cancel" placeholder="Reason">' +
+    '<button class="secondary" onclick="if(confirm(\'Cancel this booking and release its dates?\'))act(\'cancel\',{reason:val(\'a_cancel\')})">Cancel booking</button>';
+  document.getElementById('bookingView').innerHTML = h;
+}
+
+function act(action, payload) {
+  payload.code = CURRENT.booking.code;
+  call('staffAction', [action, payload], function (r) {
+    if (r.ok) { loadBookingThen(r.message); refresh(); }
+    else show('actionMsg', 'err', r.message + (r.errors ? '\n' + Object.keys(r.errors).map(function (k) { return '• ' + r.errors[k]; }).join('\n') : ''));
+  });
+}
+function loadBookingThen(message) {
+  call('staffLoadBooking', [CURRENT.booking.code], function (r) { if (r.ok) { CURRENT = r; renderBooking(r); show('actionMsg', 'ok', message); } });
+}
+
+function manualBooking() {
+  var ids = Array.prototype.filter.call(document.querySelectorAll('.m_item'), function (c) { return c.checked; }).map(function (c) { return c.value; });
+  var p = {
+    source: val('m_source'), customerName: val('m_name'), mobile: val('m_mobile'), facebookName: val('m_fb'), facebookLink: val('m_fblink'),
+    itemIds: ids, pickupDate: val('m_pickup'), days: Number(val('m_days')), pickupTime: val('m_time'),
+    acceptTerms: document.getElementById('m_terms').checked, acceptPrivacy: document.getElementById('m_privacy').checked,
+    confirmNow: document.getElementById('m_confirm').checked, depositVerified: val('m_dep')
+  };
+  call('staffAction', ['manualBooking', p], function (r) {
+    if (r.ok) { show('status', 'ok', r.message); document.getElementById('code').value = r.code; loadBooking(); refresh(); }
+    else show('status', 'err', r.message + (r.errors ? '\n' + Object.keys(r.errors).map(function (k) { return '• ' + r.errors[k]; }).join('\n') : ''));
+  });
+}
+
+function addBlock() {
+  var p = { itemId: val('b_item'), start: val('b_start'), end: val('b_end') || val('b_start'), reason: val('b_reason'), force: document.getElementById('b_force').checked };
+  call('staffAction', ['block', p], function (r) { show('status', r.ok ? 'ok' : 'err', r.message); if (r.ok) refresh(); });
+}
+
+refresh();
+</script>
+</body>
+</html>
