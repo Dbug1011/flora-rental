@@ -15,9 +15,9 @@ Check with **Flora menu → Check launch settings**.
 | `rental_terms` (enforced) | Review the prefilled terms (from the How-to-rent carousel). Must match the signed rental agreement | **Prefilled — review** |
 | `facebook_page_url` (enforced) | Flora's Page link (the "Message us" and "Message Flora on Facebook" buttons) | **Done: https://www.facebook.com/profile.php?id=61595154223240** |
 | `pickup_location` (enforced) | What customers see before booking | **Prefilled: 109-A E.K. Inting St., Mansasa, Tagbilaran City** |
-| `operating_hours` (enforced) | Days and opening hours | **Confirmed: Monday–Friday, 7:30 AM–8:30 PM** |
+| `operating_hours` (enforced) | Days and opening hours | **Confirmed: Monday–Sunday, 7:30 AM–8:30 PM** |
 | `pickup_time_slots` (enforced) | One per line | **Not set** |
-| `return_deadline_time` (enforced) | Time dresses are due back on the return date, e.g. 6:00 PM | **Not set** |
+| `return_deadline_time` (enforced) | Time dresses are due back on the return date | **Confirmed: 8:30 PM (Asia/Manila)** |
 | `hold_hours` | How long a website request holds dresses before expiring (default 24) | Default |
 | `cleaning_buffer_days` | Days blocked after each return (default 1) | Default |
 | `min_lead_days` / `max_advance_days` | Earliest/furthest online pickup (default 1 / 180 days) | Default |
@@ -40,11 +40,11 @@ Each physical garment needs its own row and Item ID. Before ticking **Published*
 Owner-confirmed sizes: Poppy M, Camellia S, Hibiscus S, Magnolia L, Peony Free size,
 Sweet Pea M, Hydrangea M, Bluebell S, Sampaguita M, Calla M, Dahlia S.
 
-Pending workflow clarification: cancelled requests should retain Cancelled status; successfully returned rentals
-should appear in a separate completed/archive tab. Confirm whether inspection and deposit settlement must finish
-first. Keep authoritative booking rows intact so cleaning buffers, availability and history remain reliable.
+Confirmed workflow (not yet implemented): cancelled requests retain Cancelled status; completed rentals
+appear in a separate completed/archive tab only after all dresses are returned, inspected, and the deposit is settled.
+Keep authoritative booking rows intact so cleaning buffers, availability and history remain reliable.
 Archiving does not remove personal data; the retention period still needs an explicit owner decision.
-Confirm weekend pickup/return restrictions separately from the displayed opening hours.
+Open all seven days. Pickup slot choices still need confirmation. Policies remain drafts pending joint review.
 The XLSX template must be regenerated before import to include the newly confirmed opening hours.
 
 ## Accounts and integrations
