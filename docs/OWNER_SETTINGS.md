@@ -35,7 +35,7 @@ Each physical garment needs its own row and Item ID. Before ticking **Published*
   `/dresses/name.jpg`) or use any `https://` image link. Google Drive "share" links don't display as images.
 * **Styled preview URLs** — the AI-styled images. The site always labels these "AI-styled preview".
 * **Accessories**, **Care notes**, **Size**, **Color**.
-* Confirm the dress names (the 8 new names are suggestions) and SF003 Hibiscus's size and description.
+* Confirm the dress names (the 8 new names are suggestions; "Kalia" was read as Calla) and SF003 Hibiscus's description.
 
 Owner-confirmed sizes: Poppy M, Camellia S, Hibiscus S, Magnolia L, Peony Free size,
 Sweet Pea M, Hydrangea M, Bluebell S, Sampaguita M, Calla M, Dahlia S.
@@ -45,7 +45,7 @@ appear in a separate completed/archive tab only after all dresses are returned, 
 Keep authoritative booking rows intact so cleaning buffers, availability and history remain reliable.
 Archiving does not remove personal data; the retention period still needs an explicit owner decision.
 Open all seven days. Pickup slot choices still need confirmation. Policies remain drafts pending joint review.
-The XLSX template must be regenerated before import to include the newly confirmed opening hours.
+The XLSX template was regenerated on 2026-10-23 with the confirmed opening hours and return deadline.
 
 ## Accounts and integrations
 
