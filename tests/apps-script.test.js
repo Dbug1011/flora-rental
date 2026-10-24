@@ -27,10 +27,11 @@ function ready() {
     ['operating_hours', '10–6'], ['pickup_time_slots', '10:00 AM\n2:00 PM'], ['return_deadline_time', '6:00 PM'],
     ['extension_basis', 'per_dress'], ['deposit_basis', 'per_booking'], ['privacy_notice', 'Privacy'], ['cancellation_policy', 'Cancel']]
     .forEach(([k, v]) => setSetting(s, k, v));
-  // publish and price two dresses
+  // publish and price two dresses; the rest of the (published) sample catalog is unpublished here
   const cat = s.Catalog.cells;
   const H = cat[0];
   const col = (h) => H.indexOf(h);
+  cat.slice(1).forEach((row) => { row[col('Published')] = false; });
   cat[1][col('Base rental price')] = 399; cat[1][col('Published')] = true; cat[1][col('Measurements')] = 'Bust 32 in';
   cat[2][col('Base rental price')] = 450; cat[2][col('Published')] = true;
   return g;

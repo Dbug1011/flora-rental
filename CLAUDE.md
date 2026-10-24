@@ -29,10 +29,10 @@ not yet connected to a real Google Sheet. Real bookings stay OFF until the owner
 ## Brand
 Flora design system (claude.ai artifact F3pkoJ8za7LJfP1vJqhPxZ): fuchsia #C21875, blush #F7D5E5, plum #4B203D, white bg;
 Cormorant Garamond headings, DM Sans body (self-hosted via @fontsource). Tagline "Pick your bloom." Never retype the wordmark —
-use `public/flora-logo-tight.svg` / `flora-logo.svg`. AI-styled images must always be labelled "AI-styled preview".
+use `public/flora-logo-tight.svg` / `flora-logo.svg`. Styled (AI-made) images carry no on-image badge (owner decision 2026-10-24); while a dress has no real photos, its page shows one neutral line: "Styled photos. Real photos of this dress are coming soon — message us to see it before booking."
 
 ## Catalog state
-11 dresses, all **unpublished, no measurements** in the real template. Prices (3-day, set 2026-10-22): Poppy ₱799, Camellia ₱599,
+11 dresses, all **published (2026-10-24), no measurements yet** in the real template. Prices (3-day, set 2026-10-22): Poppy ₱799, Camellia ₱599,
 Hibiscus ₱599, Magnolia ₱499, Peony ₱399, Sweet Pea ₱499, Hydrangea ₱599, Bluebell ₱599, Sampaguita ₱499, Calla ₱599, Dahlia ₱799.
 SF001 Poppy (M, Red), SF002 Camellia (S, Red), SF003 Hibiscus (S, Beige), SF004 Magnolia (L, Ivory), SF005 Peony (Free size, Pink),
 SF006 Sweet Pea (M, Pink), SF007 Hydrangea (M, Blue), SF008 Bluebell (S, Blue), SF009 Sampaguita (M, Ivory), SF010 Calla (M, Ivory),

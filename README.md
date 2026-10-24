@@ -28,7 +28,7 @@ Staff ──▶ Google Sheet → Flora menu → staff panel ──────�
 | `apps-script/` | Booking service + staff panel to paste into the Sheet's Apps Script project |
 | `shared/booking-core.js` | Shared booking rules |
 | `sheets-template/Flora_Booking_Sheet_Template.xlsx` | The five tabs with headers, default settings and the draft catalog (optional — the setup script creates the same tabs) |
-| `public/dresses/` | Dress images. Current files are **AI-styled previews** — add actual garment photos before launch |
+| `public/dresses/` | Dress images. Current files are styled previews (no badge on the site) — add actual garment photos as soon as possible |
 | `tests/` | 27 Node tests of the rules and of `Code.gs` against an in-memory fake Sheet |
 | `docs/STAFF_GUIDE.md` | Short guide for staff |
 | `docs/OWNER_SETTINGS.md` | Everything the owner must decide before real bookings open |

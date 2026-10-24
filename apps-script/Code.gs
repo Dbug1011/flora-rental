@@ -505,7 +505,7 @@ var DEFAULT_SETTINGS_ = [
   ['facebook_page_url', 'https://www.facebook.com/profile.php?id=61595154223240', 'REQUIRED. Full link to Flora\'s Facebook Page, e.g. https://www.facebook.com/yourpage'],
   ['pickup_location', '109-A E.K. Inting St., Mansasa, Tagbilaran City, Bohol 6300\nFittings and pickup by appointment.', 'REQUIRED. Shown to customers (from the Facebook Page).'],
   ['operating_hours', 'Monday–Sunday, 7:30 AM–8:30 PM', 'Owner-confirmed hours. Pickup slots and return deadline are separate settings.'],
-  ['pickup_time_slots', '', 'REQUIRED. One time per line, e.g. 10:00 AM / 12:00 PM / 2:00 PM / 4:00 PM.'],
+  ['pickup_time_slots', ['8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM', '8:00 PM'].join('\n'), 'Owner-confirmed hourly pickup times (2026-10-24). One time per line.'],
   ['return_deadline_time', '8:30 PM', 'Owner-confirmed deadline on the return date (Asia/Manila).'],
   ['rental_days', '3', 'Standard rental = 3 calendar days including pickup and return days (not 72 hours).'],
   ['max_online_days', '4', 'Longest rental customers can request online (4 = standard + 1 extra day). Longer: staff only.'],
@@ -547,7 +547,21 @@ var DEFAULT_SETTINGS_ = [
     '• Late return without an approved extension: ₱120 per day.',
     '• We inspect the dress against its recorded pickup condition. Normal wear is not treated as damage. Extra cleaning, repairs, missing accessories, or loss may result in documented charges under your signed agreement.'
   ].join('\n'), 'REQUIRED. Owner-approved rental terms shown on the website. Keep in sync with the signed rental agreement.'],
-  ['privacy_notice', '', 'REQUIRED. Paste the owner-approved privacy notice (a draft is in docs/OWNER_SETTINGS.md).'],
+  ['privacy_notice', [
+    'FLORA DRESS RENTAL — PRIVACY NOTICE',
+    '',
+    'We collect your name, mobile number, Facebook profile name and booking details when you request a reservation. We use them only to review and manage your rental: verifying your request through Facebook, contacting you about payment, pickup and return, and keeping a record of the rental and deposit.',
+    '',
+    'We check your government-issued photo ID in person at pickup and do not keep a copy.',
+    '',
+    'Your details are stored in a private Google Sheet that only Flora staff can access. They are not sold or shared except where required by law.',
+    '',
+    'We keep booking records for 1 year after your rental is completed, for accounting and dispute purposes, then delete them.',
+    '',
+    'To ask what we hold, correct it, or request deletion, message our Facebook Page.',
+    '',
+    'This notice follows the Philippine Data Privacy Act of 2012 (RA 10173).'
+  ].join('\n'), 'Owner-approved 2026-10-24 (1-year retention). Have someone with legal knowledge review it if possible.'],
   ['cancellation_policy', [
     'CANCELLATION AND REFUND POLICY',
     '',
@@ -583,15 +597,15 @@ var DEFAULT_SETTINGS_ = [
 ];
 
 var SAMPLE_CATALOG_ = [
-  { 'Item ID': 'SF001', 'Dress name': 'Poppy', 'Description': 'Short red mini dress with a sequinned sweetheart corset bodice, thin straps and a sculpted petal-ruffle skirt.', 'Size': 'Medium', 'Color': 'Red', 'Styled preview URLs': '/dresses/poppy-preview.jpg', 'Base rental price': 799, 'Included days': 3, 'Published': false },
-  { 'Item ID': 'SF002', 'Dress name': 'Camellia', 'Description': 'Red lace midi dress with thin lace straps, a boned square-neck bodice and a flowing A-line skirt over a nude lining.', 'Size': 'Small', 'Color': 'Red', 'Styled preview URLs': '/dresses/camellia-preview.jpg', 'Base rental price': 599, 'Included days': 3, 'Published': false },
-  { 'Item ID': 'SF003', 'Dress name': 'Hibiscus', 'Description': 'Beige lace midi dress with thin straps, a boned straight neckline and a soft A-line skirt.', 'Size': 'Small', 'Color': 'Beige', 'Styled preview URLs': '/dresses/hibiscus-preview.jpg', 'Base rental price': 599, 'Included days': 3, 'Published': false },
-  { 'Item ID': 'SF004', 'Dress name': 'Magnolia', 'Description': 'Ivory textured halter mini dress with a structured flared skirt, a side bow and a tulle underlayer.', 'Size': 'Large', 'Color': 'Ivory', 'Styled preview URLs': '/dresses/magnolia-preview.jpg', 'Base rental price': 499, 'Included days': 3, 'Published': false },
-  { 'Item ID': 'SF005', 'Dress name': 'Peony', 'Description': 'Blush pink chiffon mini dress with a ruched sweetheart bodice, tiered ruffle skirt and tie-on draped sleeves.', 'Size': 'Free size', 'Color': 'Pink', 'Styled preview URLs': '/dresses/peony-preview.jpg', 'Base rental price': 399, 'Included days': 3, 'Published': false },
-  { 'Item ID': 'SF006', 'Dress name': 'Sweet Pea', 'Description': 'Pink mini dress covered in embroidered and sequinned flowers in pink and lilac, with a sweetheart neckline and wide straps.', 'Size': 'Medium', 'Color': 'Pink', 'Styled preview URLs': '/dresses/sweet-pea-preview.jpg', 'Base rental price': 499, 'Included days': 3, 'Published': false },
-  { 'Item ID': 'SF007', 'Dress name': 'Hydrangea', 'Description': 'Dusty blue-grey strapless corset mini dress with grey 3D flower appliqués, beading and a gathered bubble skirt.', 'Size': 'Medium', 'Color': 'Blue', 'Styled preview URLs': '/dresses/hydrangea-preview.jpg', 'Base rental price': 599, 'Included days': 3, 'Published': false },
-  { 'Item ID': 'SF008', 'Dress name': 'Bluebell', 'Description': 'Powder blue floral lace midi dress with thin straps, a boned bodice and a full A-line skirt.', 'Size': 'Small', 'Color': 'Blue', 'Styled preview URLs': '/dresses/bluebell-preview.jpg', 'Base rental price': 599, 'Included days': 3, 'Published': false },
-  { 'Item ID': 'SF009', 'Dress name': 'Sampaguita', 'Description': 'Ivory lace mini dress with a fold-over off-shoulder neckline, a small bow and a tulle hem.', 'Size': 'Medium', 'Color': 'Ivory', 'Styled preview URLs': '/dresses/sampaguita-preview.jpg', 'Base rental price': 499, 'Included days': 3, 'Published': false },
-  { 'Item ID': 'SF010', 'Dress name': 'Calla', 'Description': 'Long strapless ivory lace gown with visible corset boning, a V-shaped waist and a full skirt.', 'Size': 'Medium', 'Color': 'Ivory', 'Styled preview URLs': '/dresses/calla-preview.jpg', 'Base rental price': 599, 'Included days': 3, 'Published': false },
-  { 'Item ID': 'SF011', 'Dress name': 'Dahlia', 'Description': 'Pink strapless mini dress made of layered petal panels edged in sequins, with a jewelled centre.', 'Size': 'Small', 'Color': 'Pink', 'Styled preview URLs': '/dresses/dahlia-preview.jpg', 'Base rental price': 799, 'Included days': 3, 'Published': false }
+  { 'Item ID': 'SF001', 'Dress name': 'Poppy', 'Description': 'Short red mini dress with a sequinned sweetheart corset bodice, thin straps and a sculpted petal-ruffle skirt.', 'Size': 'Medium', 'Color': 'Red', 'Styled preview URLs': '/dresses/poppy-preview.jpg', 'Base rental price': 799, 'Included days': 3, 'Published': true },
+  { 'Item ID': 'SF002', 'Dress name': 'Camellia', 'Description': 'Red lace midi dress with thin lace straps, a boned square-neck bodice and a flowing A-line skirt over a nude lining.', 'Size': 'Small', 'Color': 'Red', 'Styled preview URLs': '/dresses/camellia-preview.jpg', 'Base rental price': 599, 'Included days': 3, 'Published': true },
+  { 'Item ID': 'SF003', 'Dress name': 'Hibiscus', 'Description': 'Beige lace midi dress with thin straps, a boned straight neckline and a soft A-line skirt.', 'Size': 'Small', 'Color': 'Beige', 'Styled preview URLs': '/dresses/hibiscus-preview.jpg', 'Base rental price': 599, 'Included days': 3, 'Published': true },
+  { 'Item ID': 'SF004', 'Dress name': 'Magnolia', 'Description': 'Ivory textured halter mini dress with a structured flared skirt, a side bow and a tulle underlayer.', 'Size': 'Large', 'Color': 'Ivory', 'Styled preview URLs': '/dresses/magnolia-preview.jpg', 'Base rental price': 499, 'Included days': 3, 'Published': true },
+  { 'Item ID': 'SF005', 'Dress name': 'Peony', 'Description': 'Blush pink chiffon mini dress with a ruched sweetheart bodice, tiered ruffle skirt and tie-on draped sleeves.', 'Size': 'Free size', 'Color': 'Pink', 'Styled preview URLs': '/dresses/peony-preview.jpg', 'Base rental price': 399, 'Included days': 3, 'Published': true },
+  { 'Item ID': 'SF006', 'Dress name': 'Sweet Pea', 'Description': 'Pink mini dress covered in embroidered and sequinned flowers in pink and lilac, with a sweetheart neckline and wide straps.', 'Size': 'Medium', 'Color': 'Pink', 'Styled preview URLs': '/dresses/sweet-pea-preview.jpg', 'Base rental price': 499, 'Included days': 3, 'Published': true },
+  { 'Item ID': 'SF007', 'Dress name': 'Hydrangea', 'Description': 'Dusty blue-grey strapless corset mini dress with grey 3D flower appliqués, beading and a gathered bubble skirt.', 'Size': 'Medium', 'Color': 'Blue', 'Styled preview URLs': '/dresses/hydrangea-preview.jpg', 'Base rental price': 599, 'Included days': 3, 'Published': true },
+  { 'Item ID': 'SF008', 'Dress name': 'Bluebell', 'Description': 'Powder blue floral lace midi dress with thin straps, a boned bodice and a full A-line skirt.', 'Size': 'Small', 'Color': 'Blue', 'Styled preview URLs': '/dresses/bluebell-preview.jpg', 'Base rental price': 599, 'Included days': 3, 'Published': true },
+  { 'Item ID': 'SF009', 'Dress name': 'Sampaguita', 'Description': 'Ivory lace mini dress with a fold-over off-shoulder neckline, a small bow and a tulle hem.', 'Size': 'Medium', 'Color': 'Ivory', 'Styled preview URLs': '/dresses/sampaguita-preview.jpg', 'Base rental price': 499, 'Included days': 3, 'Published': true },
+  { 'Item ID': 'SF010', 'Dress name': 'Calla', 'Description': 'Long strapless ivory lace gown with visible corset boning, a V-shaped waist and a full skirt.', 'Size': 'Medium', 'Color': 'Ivory', 'Styled preview URLs': '/dresses/calla-preview.jpg', 'Base rental price': 599, 'Included days': 3, 'Published': true },
+  { 'Item ID': 'SF011', 'Dress name': 'Dahlia', 'Description': 'Pink strapless mini dress made of layered petal panels edged in sequins, with a jewelled centre.', 'Size': 'Small', 'Color': 'Pink', 'Styled preview URLs': '/dresses/dahlia-preview.jpg', 'Base rental price': 799, 'Included days': 3, 'Published': true }
 ];

@@ -196,12 +196,10 @@ export default function CatalogBrowser({ items, settings }: { items: PublicItem[
                 <article key={it.id} className={'card' + (a === 'no' ? ' dim' : '')}>
                   <Link href={href} className="photo" aria-label={`View ${it.name}`}>
                     {cover ? (
-                      <img src={cover.src} alt={`${it.name}${cover.ai ? ' (AI-styled preview)' : ''}`} loading="lazy" />
+                      <img src={cover.src} alt={it.name} loading="lazy" />
                     ) : (
                       <span className="state" style={{ border: 0 }}>Photo coming soon</span>
-                    )}
-                    {cover?.ai && <span className="badge ai">AI-styled preview</span>}
-                  </Link>
+                    )}                  </Link>
                   <h3>
                     <Link href={href}>{it.name}</Link>
                   </h3>

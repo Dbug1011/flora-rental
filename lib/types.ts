@@ -6,7 +6,7 @@ export type PublicItem = {
   color: string;
   measurements: string;
   photos: string[]; // actual garment photographs
-  previews: string[]; // AI-styled previews (always labelled on the site)
+  previews: string[]; // styled previews; no badge, Gallery shows a neutral note when there are no real photos
   price: number | null;
   includedDays: number;
   extensionRate: number;

@@ -10,13 +10,13 @@ Check with **Flora menu → Check launch settings**.
 | --- | --- | --- |
 | `deposit_basis` (enforced) | `per_booking` (₱500 once) or `per_dress` (₱500 × dresses) | **Done: per_dress (₱500 × dresses)** |
 | `extension_basis` (enforced) | `per_dress` (₱100 × dresses × extra days; what the brief assumes) or `per_booking` | **Done: per_dress** |
-| `cancellation_policy` (enforced) | When the deposit is refunded / forfeited if the customer cancels, if Flora cancels, and refund timeline | **Drafted (7+ days full, 3–6 days 50% or move, <3 days forfeited; typhoon signal 2+ free move/refund; refunds in 3 business days) — review** |
-| `privacy_notice` (enforced) | Approve the draft below (or your own) | **Draft below** |
-| `rental_terms` (enforced) | Review the prefilled terms (from the How-to-rent carousel). Must match the signed rental agreement | **Prefilled — review** |
+| `cancellation_policy` (enforced) | When the deposit is refunded / forfeited if the customer cancels, if Flora cancels, and refund timeline | **Approved as drafted (2026-10-24)** |
+| `privacy_notice` (enforced) | Approve the draft below (or your own) | **Approved with 1-year retention (2026-10-24); in Code.gs defaults** |
+| `rental_terms` (enforced) | Review the prefilled terms (from the How-to-rent carousel). Must match the signed rental agreement | **Approved as drafted (2026-10-24)** |
 | `facebook_page_url` (enforced) | Flora's Page link (the "Message us" and "Message Flora on Facebook" buttons) | **Done: https://www.facebook.com/profile.php?id=61595154223240** |
 | `pickup_location` (enforced) | What customers see before booking | **Prefilled: 109-A E.K. Inting St., Mansasa, Tagbilaran City** |
 | `operating_hours` (enforced) | Days and opening hours | **Confirmed: Monday–Sunday, 7:30 AM–8:30 PM** |
-| `pickup_time_slots` (enforced) | One per line | **Not set** |
+| `pickup_time_slots` (enforced) | One per line | **Confirmed: hourly, 8:00 AM–8:00 PM** |
 | `return_deadline_time` (enforced) | Time dresses are due back on the return date | **Confirmed: 8:30 PM (Asia/Manila)** |
 | `hold_hours` | How long a website request holds dresses before expiring (default 24) | Default |
 | `cleaning_buffer_days` | Days blocked after each return (default 1) | Default |
@@ -33,7 +33,7 @@ Each physical garment needs its own row and Item ID. Before ticking **Published*
 * **Measurements** — measured bust, waist, hips, length with units. The site never guesses.
 * **Photo URLs** — *actual* garment photos (front, back, detail). Put image files in `public/dresses/` (then
   `/dresses/name.jpg`) or use any `https://` image link. Google Drive "share" links don't display as images.
-* **Styled preview URLs** — the AI-styled images. The site always labels these "AI-styled preview".
+* **Styled preview URLs** — the styled (AI-made) images. Shown without a badge; a dress with no real photos shows a short "real photos coming soon" note.
 * **Accessories**, **Care notes**, **Size**, **Color**.
 * Confirm the dress names (the 8 new names are suggestions) and SF003 Hibiscus's size and description.
 
@@ -44,7 +44,7 @@ Confirmed workflow (not yet implemented): cancelled requests retain Cancelled st
 appear in a separate completed/archive tab only after all dresses are returned, inspected, and the deposit is settled.
 Keep authoritative booking rows intact so cleaning buffers, availability and history remain reliable.
 Archiving does not remove personal data; the retention period still needs an explicit owner decision.
-Open all seven days. Pickup slot choices still need confirmation. Policies remain drafts pending joint review.
+Open all seven days, hourly pickup 8:00 AM–8:00 PM. Policies approved as drafted 2026-10-24. All 11 dresses published.
 The XLSX template must be regenerated before import to include the newly confirmed opening hours.
 
 ## Accounts and integrations
@@ -65,15 +65,15 @@ The XLSX template must be regenerated before import to include the newly confirm
 6. Walk the staff flow: approve account → record deposit → confirm → pickup → partial return → refund.
 7. Delete the test rows, set the real values, then turn `bookings_enabled` TRUE.
 
-## Draft privacy notice (owner must review)
+## Privacy notice (approved 2026-10-24)
 
 > **Flora Dress Rental — Privacy Notice**
 > We collect your name, mobile number, Facebook profile name and booking details when you request a reservation. We use
 > them only to review and manage your rental: verifying your request through Facebook, contacting you about payment,
 > pickup and return, and keeping a record of the rental and deposit. We check your government-issued ID in person at
 > pickup and do not keep a copy. Your details are stored in a private Google Sheet that only Flora staff can access,
-> and are not sold or shared except where required by law. We keep booking records for up to [X] years for accounting
+> and are not sold or shared except where required by law. We keep booking records for 1 year after your rental is completed, for accounting
 > and dispute purposes, then delete them. To ask what we hold, correct it, or request deletion, message our Facebook Page.
 > This notice follows the Philippine Data Privacy Act of 2012 (RA 10173).
 
-Fill in the retention period. Have someone with legal knowledge review it if possible.
+Retention set to 1 year (2026-10-24). Have someone with legal knowledge review it if possible.

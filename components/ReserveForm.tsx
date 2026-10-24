@@ -230,8 +230,7 @@ export default function ReserveForm({ items, settings }: { items: PublicItem[]; 
                   return (
                     <div key={o.id} role="listitem" className={'add-card' + (busy ? ' dim' : '')}>
                       <div className="ph">
-                        {c ? <img src={c.src} alt={`${o.name}${c.ai ? ' (AI-styled preview)' : ''}`} loading="lazy" /> : <span className="tiny muted">Photo coming soon</span>}
-                        {c?.ai && <span className="badge ai">AI-styled preview</span>}
+                        {c ? <img src={c.src} alt={o.name} loading="lazy" /> : <span className="tiny muted">Photo coming soon</span>}
                       </div>
                       <strong>{o.name}</strong>
                       <span className="tiny muted">{[o.size, FloraCore.peso(o.price)].filter(Boolean).join(' · ')}</span>
