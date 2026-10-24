@@ -205,9 +205,8 @@ function menuCheckLaunch() {
   var issues = [];
   st.catalog.forEach(function (it) {
     if (!it.published) return;
+    // Measurements and actual photos are optional (owner decision 2026-10-24); only a missing price matters.
     if (!(it.price > 0)) issues.push(it.id + ' ' + it.name + ': published without a price (hidden from booking)');
-    if (!it.measurements) issues.push(it.id + ' ' + it.name + ': no measurements');
-    if (!it.photos.length) issues.push(it.id + ' ' + it.name + ': no actual garment photo (only styled previews)');
   });
   var msg = (blockers.length ? 'Settings still required before bookings can open:\n• ' + blockers.join('\n• ') : 'All required settings are filled in.') +
     '\n\nbookings_enabled = ' + (st.settings.bookingsEnabled ? 'TRUE' : 'FALSE') +
