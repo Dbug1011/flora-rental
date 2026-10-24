@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   icons: { icon: '/favicon.svg' }
 };
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: '#ffffff' };
+// Header settings (Facebook link, preview banner) come from the booking service, so never pre-render at build time.
+export const dynamic = 'force-dynamic';
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { settings, preview } = await getCatalog();

@@ -7,7 +7,8 @@ import Gallery from '@/components/Gallery';
 import DressBooking from '@/components/DressBooking';
 import ServiceError from '@/components/ServiceError';
 
-export const revalidate = 60;
+// Rendered per request; the catalog itself is cached for 60 s in lib/service.ts (successes only).
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const { items } = await getCatalog();

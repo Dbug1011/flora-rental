@@ -4,7 +4,8 @@ import FloraCore from '@/shared/booking-core';
 import { getCatalog } from '@/lib/service';
 
 export const metadata: Metadata = { title: 'How to rent · Flora Dress Rental' };
-export const revalidate = 60;
+// Rendered per request; the catalog itself is cached for 60 s in lib/service.ts (successes only).
+export const dynamic = 'force-dynamic';
 
 export default async function HowToRent() {
   const { settings: s } = await getCatalog();

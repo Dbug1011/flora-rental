@@ -247,13 +247,13 @@ function setupFloraSheet() {
   listColumn_(items, 'Pickup status', ['Not picked up', 'Picked up']);
   listColumn_(items, 'Return status', ['Not returned', 'Returned']);
 
-  if (settings.getLastRow() < 2) {
+  if (lastFilledRow_(settings) < 2) {
     var rows = DEFAULT_SETTINGS_.map(function (r) { return [r[0], r[1], r[2]]; });
     settings.getRange(2, 1, rows.length, 3).setValues(rows);
     settings.setColumnWidth(2, 420);
     settings.setColumnWidth(3, 420);
   }
-  if (catalog.getLastRow() < 2) {
+  if (lastFilledRow_(catalog) < 2) {
     var cat = SAMPLE_CATALOG_.map(function (r) {
       return CATALOG_HEADERS.map(function (h) { return r[h] === undefined ? '' : r[h]; });
     });
@@ -408,7 +408,19 @@ function appendObjects_(sh, cols, objs) {
   var rows = objs.map(function (o) {
     return hm.header.map(function (h) { var f = fieldByHeader[h]; return f ? toCell_(o[f]) : ''; });
   });
-  sh.getRange(sh.getLastRow() + 1, 1, rows.length, hm.header.length).setValues(rows);
+  sh.getRange(lastFilledRow_(sh) + 1, 1, rows.length, hm.header.length).setValues(rows);
+}
+
+// Last row whose first column (Item ID / Booking code / Key) is filled. getLastRow() is not enough:
+// checkbox columns put FALSE in every empty row, so Sheets reports the whole column as used.
+function lastFilledRow_(sh) {
+  var last = sh.getLastRow();
+  if (last < 1) return 0;
+  var col = sh.getRange(1, 1, last, 1).getValues();
+  for (var r = col.length - 1; r >= 0; r--) {
+    if (String(col[r][0]).trim() !== '') return r + 1;
+  }
+  return 0;
 }
 
 function updateRow_(sh, cols, row, fields) {

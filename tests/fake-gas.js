@@ -56,6 +56,18 @@ function makeRange(sheet, row, col, nr, nc) {
       return range;
     },
     setValue: (v) => range.setValues([[v]]),
+    // Mimic Sheets: checkbox validation turns every empty cell in the range into an unchecked box (FALSE).
+    setDataValidation: (rule) => {
+      if (rule && rule.checkbox) {
+        for (let r = 0; r < nr; r++) {
+          const R = row - 1 + r;
+          sheet.cells[R] = sheet.cells[R] || [];
+          const v = sheet.cells[R][col - 1];
+          if (v === '' || v === undefined) sheet.cells[R][col - 1] = false;
+        }
+      }
+      return range;
+    },
     protect: () => chainable()
   };
   const proxied = new Proxy(range, { get: (t, k) => (k in t ? t[k] : () => proxied) });
@@ -78,7 +90,16 @@ function loadGas() {
       getActiveSpreadsheet: () => ss,
       flush: () => {},
       getUi: () => { throw new Error('no ui in tests'); },
-      newDataValidation: () => chainable(),
+      newDataValidation: () => {
+        const rule = {};
+        const builder = new Proxy({}, {
+          get: (t, k) => (k === 'then' ? undefined
+            : k === 'build' ? () => rule
+            : k === 'requireCheckbox' ? () => { rule.checkbox = true; return builder; }
+            : () => builder)
+        });
+        return builder;
+      },
       ProtectionType: { RANGE: 'RANGE', SHEET: 'SHEET' }
     },
     LockService: {

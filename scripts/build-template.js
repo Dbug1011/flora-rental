@@ -5,6 +5,9 @@ const g = loadGas();
 g.ctx.setupFloraSheet();
 const out = {};
 for (const name of ['Catalog', 'Bookings', 'Booking Items', 'Blocked Dates', 'Settings']) {
-  out[name] = g.sheets[name].cells.map((r) => (r || []).map((v) => (v === undefined ? '' : v)));
+  // Keep the header and rows with a first-column key; drop the empty checkbox rows.
+  out[name] = g.sheets[name].cells
+    .filter((r, i) => i === 0 || String((r || [])[0] || '').trim())
+    .map((r) => (r || []).map((v) => (v === undefined ? '' : v)));
 }
 process.stdout.write(JSON.stringify(out));

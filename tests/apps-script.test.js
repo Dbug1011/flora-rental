@@ -53,7 +53,14 @@ test('setup creates all tabs, headers, settings and sample catalog', () => {
   const { ctx, sheets, props } = loadGas();
   ctx.setupFloraSheet();
   assert.deepEqual(Object.keys(sheets).sort(), ['Blocked Dates', 'Booking Items', 'Bookings', 'Catalog', 'Settings']);
-  assert.equal(sheets.Catalog.cells.length, 12);
+  const cat = sheets.Catalog.cells;
+  const dresses = cat.slice(1).filter((r) => String(r[0] || '').trim());
+  assert.equal(dresses.length, 11);
+  assert.ok(dresses.every((r) => r[cat[0].indexOf('Published')] === true));
+  // Running setup again (repair) must not duplicate the catalog or settings.
+  ctx.setupFloraSheet();
+  assert.equal(sheets.Catalog.cells.slice(1).filter((r) => String(r[0] || '').trim()).length, 11);
+  assert.equal(sheets.Settings.cells.filter((r) => r[0] === 'bookings_enabled').length, 1);
   assert.ok(props.FLORA_API_SECRET.length >= 32);
   assert.equal(sheets.Settings.cells[1][0], 'bookings_enabled');
 });

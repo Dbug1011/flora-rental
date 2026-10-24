@@ -3,7 +3,8 @@ import CatalogBrowser from '@/components/CatalogBrowser';
 import Steps from '@/components/Steps';
 import ServiceError from '@/components/ServiceError';
 
-export const revalidate = 60;
+// Rendered per request; the catalog itself is cached for 60 s in lib/service.ts (successes only).
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const { items, settings, error } = await getCatalog();

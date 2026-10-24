@@ -1,8 +1,10 @@
 # Flora Dress Rental — project handoff (for Codex)
 
 Owner: Kiki (Karis Ruth Jumawan). Business: Flora Dress Rental, Tagbilaran City, Bohol. In collaboration with Kimona-Boholana.
-Status (2026-10-22): site + booking service built and tested in **preview (mock) mode only**. Not yet deployed to Vercel,
-not yet connected to a real Google Sheet. Real bookings stay OFF until the owner settings in `docs/OWNER_SETTINGS.md` are done.
+Status (2026-10-24): GitHub Dbug1011/flora-rental (private) → Vercel (mock until env vars switched). Real Sheet "Flora Booking Sheet"
+in floradressrentalbohol@gmail.com, bound Apps Script deployed as web app (`.clasp.json`; push with `.tools/clasp` — Avast intercepts
+HTTPS, so Node needs NODE_EXTRA_CA_CERTS=C:\ProgramData\Avast Software\Avast\wscert.pem). Local `.env.local` = apps_script, tested OK.
+Pages are force-dynamic (catalog cached 60 s in lib/service.ts). `bookings_enabled` stays FALSE until the Messenger launch test passes.
 
 ## Architecture (do not change without reason)
 - Next.js 14 App Router site (`app/`, `components/`, `lib/`) on Vercel. Never touches the Sheet directly.

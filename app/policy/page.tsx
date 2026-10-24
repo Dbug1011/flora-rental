@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { getCatalog } from '@/lib/service';
 
 export const metadata: Metadata = { title: 'Rental policy · Flora Dress Rental' };
-export const revalidate = 60;
+// Rendered per request; the catalog itself is cached for 60 s in lib/service.ts (successes only).
+export const dynamic = 'force-dynamic';
 
 export default async function PolicyPage() {
   const { settings, error } = await getCatalog();
